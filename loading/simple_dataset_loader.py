@@ -13,6 +13,7 @@ class SimpleDatasetLoader:
         # initialize list of features and labels
         data = []
         labels = []
+        imageNames = []
 
         # loop over the input images
         for (i, imagePath) in enumerate(imagePaths):
@@ -20,6 +21,7 @@ class SimpleDatasetLoader:
             # /path/to/dataset/{class}/{image name}.jpg
             image = cv2.imread(imagePath)
             class_label = imagePath.split("/")[-2]
+            image_name = imagePath.split("/")[-1]
 
             if self.preprocessors is not None:
                 # loop over the preprocessors and apply each to the image
@@ -31,9 +33,11 @@ class SimpleDatasetLoader:
                 data.append(image)
                 # save the corresponding label of this image
                 labels.append(class_label)
+                # save the image name
+                imageNames.append(image_name)
 
                 if verbose > 0 and i > 0 and (i + 1) % verbose == 0:
                     print(f"processed {i + 1} / {len(imagePaths)}")
 
         # return a tuple of the data and labels
-        return (np.array(data), np.array(labels))
+        return (np.array(data), np.array(labels), np.array(imageNames))
